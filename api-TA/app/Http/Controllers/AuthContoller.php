@@ -136,8 +136,8 @@ class AuthContoller extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'alamat' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
+            'alamat' => 'nullable|string|max:255',
             'photo' => 'nullable|image',
             'password' => 'nullable|min:8|confirmed',
             'usia' => 'nullable|numeric',
@@ -149,8 +149,13 @@ class AuthContoller extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $user->name = $request->input('name');
-        $user->alamat = $request->input('alamat');
+        if ($request->filled('alamat')) {
+            $user->alamat = $request->input('alamat');
+        }
+        
+        if ($request->filled('name')) {
+            $user->name = $request->input('name');
+        }
 
         if ($request->filled('password')) {
             $user->password = bcrypt($request->input('password'));

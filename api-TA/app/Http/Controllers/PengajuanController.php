@@ -47,6 +47,7 @@ class PengajuanController extends Controller
             'end_date'              => 'required|date|after_or_equal:start_date',
             'estimasi_pengembalian' => 'required|date|after:today',
             'tenor'                 => 'required',
+            'metode_pelunasan'      => 'required',
             'gambar'                => 'required|array',
             'gambar.*'              => 'image',
             'kebutuhan.*.nama'      => 'required',
@@ -76,6 +77,7 @@ class PengajuanController extends Controller
             'komoditas'             => $request->input('komoditas'),
             'estimasi_pengembalian' => $request->input('estimasi_pengembalian'),
             'tenor'                 => $request->input('tenor'),
+            'metode_pelunasan'      => $request->input('metode_pelunasan'),
             'status'                => 'Menunggu Konfirmasi',
             
         ]);
@@ -172,7 +174,7 @@ class PengajuanController extends Controller
         return response()->json([
             'Pengajuan' => $pengajuan,
             'Informasi Petani' => $informasiTani
-        ]);
+        ],200);
 
     }
     
@@ -216,11 +218,13 @@ class PengajuanController extends Controller
             ->where('user_id', $user->id)
             ->findOrFail($id);
 
-        return response()->json($pengajuan);
+        return response()->json([
+            'messagae' => 'Info pinjaman berhasil diubah',
+            'pengajuan' => $pengajuan],200);
     }
 
     public function deletePengajuan($id){
-        $user = auth()->guard('admin-api')->user();
+        $user = auth()->guard('user-api')->user();
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }

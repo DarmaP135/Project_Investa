@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Models\FilePengajuan;
 use App\Models\InfoPinjaman;
-use App\Models\kebutuhan;
+use App\Models\InfoKunjungan;
+use App\Models\InfoPemasukan;
+use App\Models\Kebutuhan;
 
 class Pengajuan extends Model
 {
@@ -24,6 +26,7 @@ class Pengajuan extends Model
         'tenor',
         'imbal_hasil',
         'total_pengembalian',
+        'metode_pelunasan',
         'status',
     ];
 
@@ -64,6 +67,14 @@ class Pengajuan extends Model
     public function infoPinjaman()
     {
         return $this->hasOne(InfoPinjaman::class);
+    }
+
+    public function infoKunjungan(){
+        return $this->hasOne(InfoKunjungan::class);
+    }
+
+    public function infoPemasukan(){
+        return $this->hasOne(InfoPemasukan::class);
     }
     
 }

@@ -63,5 +63,6 @@ Route::group([
     Route::get('{id}/getInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'getInfoPinjam'])->name('getInfoPinjam');
     Route::post('{id}/addInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'addInfoPinjam'])->name('addInfoPinjam');
 
-
+    Route::get('{id}/getInfoKunjungan', [App\Http\Controllers\InfoKunjunganController::class, 'getInfoKunjungan'])->name('getInfoKunjungan');
+    Route::post('{id}/addInfoKunjungan', [App\Http\Controllers\InfoKunjunganController::class, 'addInfoKunjungan'])->name('addInfoKunjungan');
 });

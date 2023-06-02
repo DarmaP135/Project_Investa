@@ -13,10 +13,13 @@ class InfoPinjamanController extends Controller
 {
 
     public function getInfoPinjam($pengajuanId){
-        $user = auth()->guard('admin-api', 'user-api')->user();
-        if (!$user) {
+        $adminUser = auth()->guard('admin-api')->user();
+        $userUser = auth()->guard('user-api')->user();
+
+        if (!$adminUser && !$userUser) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+
 
         $pengajuan = Pengajuan::find($pengajuanId);
 
@@ -26,7 +29,7 @@ class InfoPinjamanController extends Controller
 
         $infoPinjaman = $pengajuan->infoPinjaman()->with('filepinjam')->get();
 
-        return response()->json($infoPinjaman);
+        return response()->json([$infoPinjaman],200);
     
     }
 
@@ -44,52 +47,52 @@ class InfoPinjamanController extends Controller
             'infoPinjam.*.barang' => 'required|string',
             'infoPinjam*.jumlah' => 'required|numeric',
             'infoPinjam.*.harga' => 'required|numeric',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
-    }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
     
-    $pengajuan = Pengajuan::findorfail($id);
+        $pengajuan = Pengajuan::findorfail($id);
 
-    $idpengajuan = $pengajuan->id;
+        $idpengajuan = $pengajuan->id;
 
-    $infoPinjamanData = $request->input('infoPinjam');
-    $infoPinjamanModels = [];
+        $infoPinjamanData = $request->input('infoPinjam');
+        $infoPinjamanModels = [];
 
-    foreach ($infoPinjamanData as $infoPinjamanItem) {
-        $infoPinjaman = new InfoPinjaman();
-        $infoPinjaman->pengajuan_id = $idpengajuan;
-        $infoPinjaman->tanggal = $infoPinjamanItem['tanggal'];
-        $infoPinjaman->barang = $infoPinjamanItem['barang'];
-        $infoPinjaman->jumlah = $infoPinjamanItem['jumlah'];
-        $infoPinjaman->harga = $infoPinjamanItem['harga'];
-        $infoPinjaman->total = $infoPinjamanItem['jumlah'] * $infoPinjamanItem['harga'];
+        foreach ($infoPinjamanData as $infoPinjamanItem) {
+            $infoPinjaman = new InfoPinjaman();
+            $infoPinjaman->pengajuan_id = $idpengajuan;
+            $infoPinjaman->tanggal = $infoPinjamanItem['tanggal'];
+            $infoPinjaman->barang = $infoPinjamanItem['barang'];
+            $infoPinjaman->jumlah = $infoPinjamanItem['jumlah'];
+            $infoPinjaman->harga = $infoPinjamanItem['harga'];
+            $infoPinjaman->total = $infoPinjamanItem['jumlah'] * $infoPinjamanItem['harga'];
 
-        $infoPinjamanModels[] = $infoPinjaman;
-    }
+            $infoPinjamanModels[] = $infoPinjaman;
+        }
 
-    $pengajuan->infoPinjaman()->saveMany($infoPinjamanModels);
+        $pengajuan->infoPinjaman()->saveMany($infoPinjamanModels);
 
-    $infoPinjam = $infoPinjaman->id;
-    
-    if ($request->hasFile('gambar')) {
-        $image = $request->file('gambar');
-        $imageName = time() . '_' . $image->getClientOriginalName();
-        $image->move('image', $imageName);
+        $infoPinjam = $infoPinjaman->id;
+        
+        if ($request->hasFile('gambar')) {
+            $image = $request->file('gambar');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move('image', $imageName);
 
-        $file = new FilePinjaman();
-        $file->alamat_gambar = $imageName;
-        $file->infopinjam_id = $infoPinjam;
-        $file->save();
-    }
+            $file = new FilePinjaman();
+            $file->alamat_gambar = $imageName;
+            $file->infopinjam_id = $infoPinjam;
+            $file->save();
+        }
 
-    return response()->json([
-        'message' => 'Info Pinjaman created successfully',
-        'Informasi Pinjaman' => $infoPinjaman
-    ]);
+        return response()->json([
+            'message' => 'Info Pinjaman created successfully',
+            'Informasi Pinjaman' => $infoPinjaman
+        ],200);
     }
 
 
