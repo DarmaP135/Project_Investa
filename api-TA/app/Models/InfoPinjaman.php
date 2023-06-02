@@ -26,7 +26,7 @@ class InfoPinjaman extends Model
 
     public function filepinjam()
     {
-         return $this->hasMany(FilePengajuan::class, 'infopinjam_id');
+         return $this->hasMany(FilePinjaman::class, 'infopinjam_id');
     }
 
 }

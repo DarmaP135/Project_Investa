@@ -60,6 +60,8 @@ Route::group([
     Route::post('updatePengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'updatePengajuan'])->name('updatePengajuan');
     Route::post('deletePengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'deletePengajuan'])->name('deletePengajuan');
 
+    Route::get('{id}/getInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'getInfoPinjam'])->name('getInfoPinjam');
     Route::post('{id}/addInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'addInfoPinjam'])->name('addInfoPinjam');
+
 
 });

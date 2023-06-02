@@ -11,7 +11,26 @@ use App\Models\InfoPinjaman;
 
 class InfoPinjamanController extends Controller
 {
+
+    public function getInfoPinjam($pengajuanId){
+        $user = auth()->guard('admin-api', 'user-api')->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pengajuan = Pengajuan::find($pengajuanId);
+
+        if (!$pengajuan) {
+            return response()->json(['error' => 'Pengajuan not found'], 404);
+        }
+
+        $infoPinjaman = $pengajuan->infoPinjaman()->with('filepinjam')->get();
+
+        return response()->json($infoPinjaman);
     
+    }
+
+
     public function addInfoPinjam(Request $request, $id){
 
         $user = auth()->guard('admin-api')->user();
@@ -20,11 +39,11 @@ class InfoPinjamanController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'infoPinjaman' => 'required|array',
-            'infoPinjaman.*.tanggal' => 'required|date|before_or_equal:today',
-            'infoPinjaman.*.barang' => 'required|string',
-            'infoPinjaman.*.jumlah' => 'required|numeric',
-            'infoPinjaman.*.harga' => 'required|numeric',
+            'infoPinjam' => 'required|array',
+            'infoPinjam.*.tanggal' => 'required|date|before_or_equal:today',
+            'infoPinjam.*.barang' => 'required|string',
+            'infoPinjam*.jumlah' => 'required|numeric',
+            'infoPinjam.*.harga' => 'required|numeric',
             'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -37,7 +56,7 @@ class InfoPinjamanController extends Controller
 
     $idpengajuan = $pengajuan->id;
 
-    $infoPinjamanData = $request->input('infoPinjaman');
+    $infoPinjamanData = $request->input('infoPinjam');
     $infoPinjamanModels = [];
 
     foreach ($infoPinjamanData as $infoPinjamanItem) {
@@ -67,7 +86,10 @@ class InfoPinjamanController extends Controller
         $file->save();
     }
 
-    return response()->json(['message' => 'Info Pinjaman created successfully']);
+    return response()->json([
+        'message' => 'Info Pinjaman created successfully',
+        'Informasi Pinjaman' => $infoPinjaman
+    ]);
     }
 
 
