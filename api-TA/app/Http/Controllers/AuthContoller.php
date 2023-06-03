@@ -221,7 +221,7 @@ class AuthContoller extends Controller
         $validator = Validator::make(request()->all(), [
             'email' => 'required|email',        
         ]);
-        
+
         //if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -283,7 +283,19 @@ class AuthContoller extends Controller
 
     public function me()
     {
-        return response()->json(auth()->guard('user-api')->user());
+        try {
+        $user = auth()->guard('user-api')->user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        
+        return response()->json($user);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['error' => 'Token Expired'], 401);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['error' => 'Invalid Token'], 401);
+        } 
     }
 
      public function refresh()
