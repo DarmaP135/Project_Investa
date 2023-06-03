@@ -218,9 +218,14 @@ class AuthContoller extends Controller
 
     public function sendResetToken(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
+        $validator = Validator::make(request()->all(), [
+            'email' => 'required|email',        
         ]);
+        
+        //if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         // Cari user berdasarkan email
         $user = User::where('email', $request->email)->first();

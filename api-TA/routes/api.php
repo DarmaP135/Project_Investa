@@ -55,9 +55,14 @@ Route::group([
     'prefix' => 'pengajuan' 
 ], function ($route){
     Route::get('getPengajuan', [App\Http\Controllers\PengajuanController::class, 'getPengajuan'])->name('getPengajuan');
+    Route::get('pengajuanAccept', [App\Http\Controllers\PengajuanController::class, 'pengajuanAccept'])->name('pengajuanAccept');
+    Route::get('pengajuanReject', [App\Http\Controllers\PengajuanController::class, 'pengajuanReject'])->name('pengajuanReject');
+    Route::get('pengajuanFinish', [App\Http\Controllers\PengajuanController::class, 'pengajuanAccept'])->name('pengajuanFinish');
+
     Route::post('addPengajuan', [App\Http\Controllers\PengajuanController::class, 'addPengajuan'])->name('addPengajuan');
     Route::post('detailPengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'detailPengajuan'])->name('detailPengajuan');
-    Route::post('updatePengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'updatePengajuan'])->name('updatePengajuan');
+    Route::post('acceptPengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'acceptPengajuan'])->name('acceptPengajuan');
+    Route::post('rejectPengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'rejectPengajuan'])->name('rejectPengajuan');
     Route::post('deletePengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'deletePengajuan'])->name('deletePengajuan');
 
     Route::get('{id}/getInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'getInfoPinjam'])->name('getInfoPinjam');

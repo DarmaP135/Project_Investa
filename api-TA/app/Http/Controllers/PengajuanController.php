@@ -13,10 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 class PengajuanController extends Controller
 {
 
-    public function getPengajuan()
-    {
-        $user = auth()->guard('user-api')->user();
-        if (!$user) {
+    public function getPengajuan(){ 
+        $adminUser = auth()->guard('admin-api')->user();
+        $userUser = auth()->guard('user-api')->user();
+
+        if (!$adminUser && !$userUser) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -32,8 +33,72 @@ class PengajuanController extends Controller
         return response()->json($pengajuan);
     }
 
-    public function addPengajuan(Request $request)
-    {
+    public function pengajuanAccept(){ 
+        $adminUser = auth()->guard('admin-api')->user();
+        $userUser = auth()->guard('user-api')->user();
+
+        if (!$adminUser && !$userUser) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pengajuan = Pengajuan::with('files', 'kebutuhan')
+            ->where('user_id', $user->id)
+            ->where('status','Sedang Berjalan')
+            ->latest()
+            ->get();
+
+        if ($pengajuan->isEmpty()) {
+            return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
+        }
+
+        return response()->json($pengajuan);
+    }
+
+    public function pengajuanReject(){ 
+        $adminUser = auth()->guard('admin-api')->user();
+        $userUser = auth()->guard('user-api')->user();
+
+        if (!$adminUser && !$userUser) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pengajuan = Pengajuan::with('files', 'kebutuhan')
+            ->where('user_id', $user->id)
+            ->where('status','Proyek Ditolak')
+            ->latest()
+            ->get();
+
+        if ($pengajuan->isEmpty()) {
+            return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
+        }
+
+        return response()->json($pengajuan);
+    }
+
+    public function pengajuanFinish(){ 
+        $adminUser = auth()->guard('admin-api')->user();
+        $userUser = auth()->guard('user-api')->user();
+
+        if (!$adminUser && !$userUser) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pengajuan = Pengajuan::with('files', 'kebutuhan')
+            ->where('user_id', $user->id)
+            ->where('status','Proyek Selesai')
+            ->latest()
+            ->get();
+
+        if ($pengajuan->isEmpty()) {
+            return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
+        }
+
+        return response()->json($pengajuan);
+    }
+
+
+
+    public function addPengajuan(Request $request){
          // Ambil user yang sedang login
         $user = auth()->guard('user-api')->user();
         if (!$user) {
@@ -156,8 +221,10 @@ class PengajuanController extends Controller
 
     public function detailPengajuan($id){
 
-        $user = auth()->guard('user-api')->user();
-        if (!$user) {
+        $adminUser = auth()->guard('admin-api')->user();
+        $userUser = auth()->guard('user-api')->user();
+
+        if (!$adminUser && !$userUser) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -181,18 +248,18 @@ class PengajuanController extends Controller
     /**
      * Update berikut untuk admin jadi admin menerima atau menolak pengajuan 
      */
-    public function updatePengajuan(Request $request, $id){
+    public function acceptPengajuan(Request $request, $id){
  
-        $user = auth()->guard('user-api','admin-api')->user();
+        $user = auth()->guard('admin-api')->user();
         if (!$user) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         $validator = Validator::make($request->all(), [
             'imbal_hasil' => 'required|numeric|min:0|max:100', 
             'status' => 'required|string',
             'resiko' => 'required|string',
-            'jumlah_unit' => 'numeric',
+            'jumlah_unit' => 'required|numeric',
             'deskripsi' => 'required|string'
         ]);
 
@@ -219,7 +286,41 @@ class PengajuanController extends Controller
             ->findOrFail($id);
 
         return response()->json([
-            'messagae' => 'Info pinjaman berhasil diubah',
+            'messagae' => 'Pengajuan berhasil disetujui',
+            'pengajuan' => $pengajuan],200);
+    }
+
+    public function rejectPengajuan(Request $request, $id){
+ 
+        $user = auth()->guard('admin-api')->user();
+        if (!$user) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $pengajuan = Pengajuan::where('user_id', $user->id)
+            ->findOrFail($id);
+
+        // Memperbarui kolom tertentu
+        $pengajuan->status = $request->input('status');
+
+
+        $pengajuan->save();
+
+        // Mengambil data pengajuan dengan relasi yang terkait
+        $pengajuan = Pengajuan::with('files', 'kebutuhan')
+            ->where('user_id', $user->id)
+            ->findOrFail($id);
+
+        return response()->json([
+            'messagae' => 'Pengajuan ditolak karena tidak memenuhi beberapa syarat',
             'pengajuan' => $pengajuan],200);
     }
 
