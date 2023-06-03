@@ -54,11 +54,17 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'pengajuan' 
 ], function ($route){
-    Route::get('getPengajuan', [App\Http\Controllers\PengajuanController::class, 'getPengajuan'])->name('getPengajuan');
-    Route::get('pengajuanAccept', [App\Http\Controllers\PengajuanController::class, 'pengajuanAccept'])->name('pengajuanAccept');
-    Route::get('pengajuanReject', [App\Http\Controllers\PengajuanController::class, 'pengajuanReject'])->name('pengajuanReject');
-    Route::get('pengajuanFinish', [App\Http\Controllers\PengajuanController::class, 'pengajuanAccept'])->name('pengajuanFinish');
 
+    //getPengajuan Untuk Petani
+    Route::get('getPengajuan', [App\Http\Controllers\PengajuanController::class, 'getPengajuan'])->name('getPengajuan');
+   
+    //getPengajuan untuk admin
+    Route::get('getPengajuanSeluruhnya', [App\Http\Controllers\PengajuanController::class, 'getPengajuanSeluruhnya'])->name('getPengajuan');
+
+    //getPengajuan yang sudah diacc dengan status "Proyek Berjalan"
+    Route::get('pengajuanAccept', [App\Http\Controllers\PengajuanController::class, 'pengajuanAccept'])->name('pengajuanAccept');
+    Route::get('pengajuanFinish', [App\Http\Controllers\PengajuanController::class, 'pengajuanAccept'])->name('pengajuanFinish');
+    
     Route::post('addPengajuan', [App\Http\Controllers\PengajuanController::class, 'addPengajuan'])->name('addPengajuan');
     Route::post('detailPengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'detailPengajuan'])->name('detailPengajuan');
     Route::post('acceptPengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'acceptPengajuan'])->name('acceptPengajuan');
@@ -67,6 +73,7 @@ Route::group([
 
     Route::get('{id}/getInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'getInfoPinjam'])->name('getInfoPinjam');
     Route::post('{id}/addInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'addInfoPinjam'])->name('addInfoPinjam');
+    Route::post('{id}/updateInfoPinjam/{infoPinjamId}', [App\Http\Controllers\InfoPinjamanController::class, 'updateInfoPinjam'])->name('updateInfoPinjam');
 
     Route::get('{id}/getInfoKunjungan', [App\Http\Controllers\InfoKunjunganController::class, 'getInfoKunjungan'])->name('getInfoKunjungan');
     Route::post('{id}/addInfoKunjungan', [App\Http\Controllers\InfoKunjunganController::class, 'addInfoKunjungan'])->name('addInfoKunjungan');

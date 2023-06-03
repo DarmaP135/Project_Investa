@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Models\FilePengajuan;
+use App\Models\User;
 use App\Models\InfoPinjaman;
 use App\Models\InfoKunjungan;
 use App\Models\InfoPemasukan;
@@ -52,6 +53,11 @@ class Pengajuan extends Model
         }
 
         return 'Investasi ini masih berlangsung. Tersisa ' . $this->day_left;
+    }
+
+    public function Users()
+    {
+         return $this->belongsTo(User::class);
     }
 
     public function Files()

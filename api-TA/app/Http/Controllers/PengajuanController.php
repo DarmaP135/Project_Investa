@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Pengajuan;
 use App\Models\Kebutuhan;
 use App\Models\InfoTani;
+use App\Models\User;
 use App\Models\FilePengajuan;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,16 +15,30 @@ class PengajuanController extends Controller
 {
 
     public function getPengajuan(){ 
-        $adminUser = auth()->guard('admin-api')->user();
-        $userUser = auth()->guard('user-api')->user();
-
-        if (!$adminUser && !$userUser) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+       $user = auth()->guard('user-api')->user();
+        if (!$user) {
+                return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         $pengajuan = Pengajuan::with('files', 'kebutuhan')
             ->where('user_id', $user->id)
             ->latest()
+            ->get();
+
+        if ($pengajuan->isEmpty()) {
+            return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
+        }
+
+        return response()->json($pengajuan);
+    }
+
+    public function getPengajuanSeluruhnya(){
+        $user = auth()->guard('admin-api')->user();
+        if (!$user) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pengajuan = Pengajuan::with('files', 'kebutuhan')
             ->get();
 
         if ($pengajuan->isEmpty()) {
@@ -41,10 +56,10 @@ class PengajuanController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $pengajuan = Pengajuan::with('files', 'kebutuhan')
-            ->where('user_id', $user->id)
-            ->where('status','Sedang Berjalan')
-            ->latest()
+        $user = $adminUser ? $adminUser : $userUser;
+
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
+            ->where('status','Proyek Berjalan')
             ->get();
 
         if ($pengajuan->isEmpty()) {
@@ -54,27 +69,7 @@ class PengajuanController extends Controller
         return response()->json($pengajuan);
     }
 
-    public function pengajuanReject(){ 
-        $adminUser = auth()->guard('admin-api')->user();
-        $userUser = auth()->guard('user-api')->user();
-
-        if (!$adminUser && !$userUser) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        $pengajuan = Pengajuan::with('files', 'kebutuhan')
-            ->where('user_id', $user->id)
-            ->where('status','Proyek Ditolak')
-            ->latest()
-            ->get();
-
-        if ($pengajuan->isEmpty()) {
-            return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
-        }
-
-        return response()->json($pengajuan);
-    }
-
+    
     public function pengajuanFinish(){ 
         $adminUser = auth()->guard('admin-api')->user();
         $userUser = auth()->guard('user-api')->user();
@@ -83,10 +78,10 @@ class PengajuanController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $pengajuan = Pengajuan::with('files', 'kebutuhan')
-            ->where('user_id', $user->id)
+        $user = $adminUser ? $adminUser : $userUser;
+
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
             ->where('status','Proyek Selesai')
-            ->latest()
             ->get();
 
         if ($pengajuan->isEmpty()) {
@@ -97,7 +92,7 @@ class PengajuanController extends Controller
     }
 
 
-
+    //Petani 
     public function addPengajuan(Request $request){
          // Ambil user yang sedang login
         $user = auth()->guard('user-api')->user();
@@ -219,6 +214,7 @@ class PengajuanController extends Controller
         ], 409);
     }
 
+    
     public function detailPengajuan($id){
 
         $adminUser = auth()->guard('admin-api')->user();
@@ -228,9 +224,10 @@ class PengajuanController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $pengajuan = Pengajuan::with('files', 'kebutuhan')
-            ->where('user_id', $user->id)
-            ->find($id);
+        $user = $adminUser ? $adminUser : $userUser;
+
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
+            ->findOrFail($id);
 
         if (!$pengajuan) {
             return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
@@ -252,7 +249,7 @@ class PengajuanController extends Controller
  
         $user = auth()->guard('admin-api')->user();
         if (!$user) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         $validator = Validator::make($request->all(), [
@@ -267,27 +264,24 @@ class PengajuanController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $pengajuan = Pengajuan::where('user_id', $user->id)
-            ->findOrFail($id);
+        $pengajuan = Pengajuan::findOrFail($id);
 
-        // Memperbarui kolom tertentu
-        $pengajuan->imbal_hasil = $request->input('imbal_hasil');
-        $pengajuan->status = $request->input('status');
-        $pengajuan->resiko = $request->input('resiko');
-        $pengajuan->jumlah_unit = $request->input('jumlah_unit');
-        $pengajuan->deskripsi = $request->input('deskripsi');
-
-
-        $pengajuan->save();
+        $pengajuan->update([
+            'imbal_hasil' => $request->input('imbal_hasil'),
+            'status' => $request->input('status'),
+            'resiko' => $request->input('resiko'),
+            'jumlah_unit' => $request->input('jumlah_unit'),
+            'deskripsi' => $request->input('deskripsi')
+        ]);
 
         // Mengambil data pengajuan dengan relasi yang terkait
-        $pengajuan = Pengajuan::with('files', 'kebutuhan')
-            ->where('user_id', $user->id)
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
             ->findOrFail($id);
 
         return response()->json([
-            'messagae' => 'Pengajuan berhasil disetujui',
-            'pengajuan' => $pengajuan],200);
+            'message' => 'Pengajuan berhasil disetujui',
+            'pengajuan' => $pengajuan
+        ], 200);
     }
 
     public function rejectPengajuan(Request $request, $id){
@@ -305,8 +299,7 @@ class PengajuanController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $pengajuan = Pengajuan::where('user_id', $user->id)
-            ->findOrFail($id);
+        $pengajuan = Pengajuan::findOrFail($id);
 
         // Memperbarui kolom tertentu
         $pengajuan->status = $request->input('status');
@@ -315,8 +308,7 @@ class PengajuanController extends Controller
         $pengajuan->save();
 
         // Mengambil data pengajuan dengan relasi yang terkait
-        $pengajuan = Pengajuan::with('files', 'kebutuhan')
-            ->where('user_id', $user->id)
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
             ->findOrFail($id);
 
         return response()->json([
