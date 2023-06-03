@@ -75,6 +75,11 @@ class Pengajuan extends Model
         return $this->hasOne(InfoPinjaman::class);
     }
 
+    public function filepinjam()
+    {
+        return $this->hasOne(FilePinjaman::class);
+    }
+
     public function infoKunjungan(){
         return $this->hasOne(InfoKunjungan::class);
     }

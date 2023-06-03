@@ -12,7 +12,7 @@ use App\Models\InfoPinjaman;
 class InfoPinjamanController extends Controller
 {
 
-    public function getInfoPinjam($pengajuanId){
+    public function getInfoPinjam($id){
         $adminUser = auth()->guard('admin-api')->user();
         $userUser = auth()->guard('user-api')->user();
 
@@ -21,15 +21,15 @@ class InfoPinjamanController extends Controller
         }
 
 
-        $pengajuan = Pengajuan::find($pengajuanId);
+        $pengajuan = Pengajuan::findOrFail($id);
+    
+        $infoPinjaman = $pengajuan->infoPinjaman()->get();
+        $fileInfoPinjaman = $pengajuan->filepinjam()->get();
 
-        if (!$pengajuan) {
-            return response()->json(['error' => 'Pengajuan not found'], 404);
-        }
-
-        $infoPinjaman = $pengajuan->infoPinjaman()->with('filepinjam')->get();
-
-        return response()->json([$infoPinjaman],200);
+        return response()->json([
+            'Info Pinjaman' => $infoPinjaman,
+            'File Info Pinjaman' => $fileInfoPinjaman
+        ], 200);
     
     }
 
@@ -76,7 +76,7 @@ class InfoPinjamanController extends Controller
 
         $pengajuan->infoPinjaman()->saveMany($infoPinjamanModels);
 
-        $infoPinjam = $infoPinjaman->id;
+        
         
         if ($request->hasFile('gambar')) {
             $image = $request->file('gambar');
@@ -85,7 +85,7 @@ class InfoPinjamanController extends Controller
 
             $file = new FilePinjaman();
             $file->alamat_gambar = $imageName;
-            $file->infopinjam_id = $infoPinjam;
+            $file->pengajuan_id = $idpengajuan;
             $file->save();
         }
 
@@ -131,26 +131,69 @@ class InfoPinjamanController extends Controller
         $infoPinjaman->total = $request->input('jumlah') * $request->input('harga');
         $infoPinjaman->save();
 
+        return response()->json([
+            'message' => 'Info Pinjaman updated successfully',
+            'Informasi Pinjaman' => $infoPinjaman
+        ], 200);
+    }
+
+    public function updateInfoFilePinjaman(Request $request, $id, $filePinjamanId){
+        $user = auth()->guard('admin-api')->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'gambar' => 'required|image|mimes:jpeg,png,jpg',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $filePinjaman = FilePinjaman::findOrFail($filePinjamanId);
+
         if ($request->hasFile('gambar')) {
             $image = $request->file('gambar');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->move('image', $imageName);
 
-            $file = FilePinjaman::where('infopinjam_id', $infoPinjamId)->first();
-            if ($file) {
-                $file->alamat_gambar = $imageName;
-                $file->save();
-            } else {
-                $newFile = new FilePinjaman();
-                $newFile->alamat_gambar = $imageName;
-                $newFile->infopinjam_id = $infoPinjamId;
-                $newFile->save();
-            }
+            $filePinjaman->alamat_gambar = $imageName;
+            $filePinjaman->save();
         }
 
         return response()->json([
-            'message' => 'Info Pinjaman updated successfully',
-            'Informasi Pinjaman' => $infoPinjaman
+            'message' => 'File Info Pinjaman updated successfully',
+            'File Info Pinjaman' => $filePinjaman
+        ], 200);
+    }
+
+    public function deleteInfoFilePinjaman($id, $filePinjamanId)
+    {
+        $user = auth()->guard('admin-api')->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $filePinjaman = FilePinjaman::findOrFail($filePinjamanId);
+        $filePinjaman->delete();
+
+        return response()->json(['message' => 'File Info Pinjaman deleted successfully'], 200);
+    }
+
+    public function deleteInfoPinjam($id, $infoPinjamId)
+    {
+        $user = auth()->guard('admin-api')->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $infoPinjaman = InfoPinjaman::findOrFail($infoPinjamId);
+
+        $infoPinjaman->delete();
+
+        return response()->json([
+            'message' => 'Info Pinjaman deleted successfully'
         ], 200);
     }
 

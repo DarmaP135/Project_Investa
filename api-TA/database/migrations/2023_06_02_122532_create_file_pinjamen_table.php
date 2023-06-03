@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('file_pinjamen', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('infopinjam_id');
+            $table->foreignId('pengajuan_id');
             $table->string('alamat_gambar');
             $table->timestamps();
         });

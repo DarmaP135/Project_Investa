@@ -71,9 +71,14 @@ Route::group([
     Route::post('rejectPengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'rejectPengajuan'])->name('rejectPengajuan');
     Route::post('deletePengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'deletePengajuan'])->name('deletePengajuan');
 
+    //Form Transaksi Info Pinjaman
     Route::get('{id}/getInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'getInfoPinjam'])->name('getInfoPinjam');
     Route::post('{id}/addInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'addInfoPinjam'])->name('addInfoPinjam');
     Route::post('{id}/updateInfoPinjam/{infoPinjamId}', [App\Http\Controllers\InfoPinjamanController::class, 'updateInfoPinjam'])->name('updateInfoPinjam');
+    Route::post('{id}/updateInfoFilePinjaman/{filePinjamanId}', [App\Http\Controllers\InfoPinjamanController::class, 'updateInfoFilePinjaman'])->name('updateInfoFilePinjaman');
+    Route::post('{id}/deleteInfoFilePinjaman/{filePinjamanId}', [App\Http\Controllers\InfoPinjamanController::class, 'deleteInfoFilePinjaman'])->name('deleteInfoFilePinjaman');
+    Route::post('{id}/deleteInfoPinjam/{infoPinjamId}', [App\Http\Controllers\InfoPinjamanController::class, 'deleteInfoPinjam'])->name('deleteInfoPinjam');
+
 
     Route::get('{id}/getInfoKunjungan', [App\Http\Controllers\InfoKunjunganController::class, 'getInfoKunjungan'])->name('getInfoKunjungan');
     Route::post('{id}/addInfoKunjungan', [App\Http\Controllers\InfoKunjunganController::class, 'addInfoKunjungan'])->name('addInfoKunjungan');

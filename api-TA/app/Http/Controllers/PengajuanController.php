@@ -22,7 +22,6 @@ class PengajuanController extends Controller
 
         $pengajuan = Pengajuan::with('files', 'kebutuhan')
             ->where('user_id', $user->id)
-            ->latest()
             ->get();
 
         if ($pengajuan->isEmpty()) {

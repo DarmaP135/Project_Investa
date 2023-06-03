@@ -24,9 +24,6 @@ class InfoPinjaman extends Model
         return $this->belongsTo(Pengajuan::class);
     }
 
-    public function filepinjam()
-    {
-         return $this->hasMany(FilePinjaman::class, 'infopinjam_id');
-    }
+    
 
-}
+} 
