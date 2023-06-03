@@ -25,7 +25,7 @@ class InfoKunjunganController extends Controller
             return response()->json(['error' => 'Pengajuan not found'], 404);
         }
 
-        $infokunjungan = InfoKunjungan::all();
+        $infokunjungan = $pengajuan->infoKunjungan()->get();
 
         return response()->json($infokunjungan, 200);
             
@@ -46,7 +46,7 @@ class InfoKunjunganController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json($validator->errors(), 422);
         }
 
         $pengajuan = Pengajuan::findOrFail($id);
@@ -75,4 +75,5 @@ class InfoKunjunganController extends Controller
             'info kunjungan' => $infoKunjungan
         ], 200);
     }
+    
 }

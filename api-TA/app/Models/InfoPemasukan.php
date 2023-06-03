@@ -10,7 +10,7 @@ class InfoPemasukan extends Model
     use HasFactory;
     protected $fillable = [
         'pengajuan_id',
-        'tangal',
+        'tanggal',
         'nama_produk',
         'jumlah',
         'harga',

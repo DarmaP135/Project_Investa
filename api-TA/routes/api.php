@@ -79,7 +79,12 @@ Route::group([
     Route::post('{id}/deleteInfoFilePinjaman/{filePinjamanId}', [App\Http\Controllers\InfoPinjamanController::class, 'deleteInfoFilePinjaman'])->name('deleteInfoFilePinjaman');
     Route::post('{id}/deleteInfoPinjam/{infoPinjamId}', [App\Http\Controllers\InfoPinjamanController::class, 'deleteInfoPinjam'])->name('deleteInfoPinjam');
 
-
+    //Form Transaksi Info Kunjungan
     Route::get('{id}/getInfoKunjungan', [App\Http\Controllers\InfoKunjunganController::class, 'getInfoKunjungan'])->name('getInfoKunjungan');
     Route::post('{id}/addInfoKunjungan', [App\Http\Controllers\InfoKunjunganController::class, 'addInfoKunjungan'])->name('addInfoKunjungan');
+
+    //Form Transaksi Info Pemasukan
+    Route::get('{id}/getInfoPemasukan', [App\Http\Controllers\InfoPemasukanController::class, 'getInfoPemasukan'])->name('getInfoPemasukan');
+    Route::post('{id}/addInfoPemasukan', [App\Http\Controllers\InfoPemasukanController::class, 'addInfoPemasukan'])->name('addInfoPemasukan');
+    
 });
