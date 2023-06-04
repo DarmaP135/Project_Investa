@@ -88,3 +88,20 @@ Route::group([
     Route::post('{id}/addInfoPemasukan', [App\Http\Controllers\InfoPemasukanController::class, 'addInfoPemasukan'])->name('addInfoPemasukan');
     
 });
+
+//Artikel
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'artikel'
+], function ($router) {
+    //Ambil semua artikel 
+    Route::get('getArtikel', [App\Http\Controllers\ArtikelController::class, 'getArtikel'])->name('getArtikel');
+    //Tambah artikel
+    Route::post('addArtikel', [App\Http\Controllers\ArtikelController::class, 'addArtikel'])->name('addArtikel');
+    //Update artikel
+    Route::post('updateArtikel', [App\Http\Controllers\ArtikelController::class, 'updateArtikel'])->name('updateArtikel');
+    //Update gambar artikel
+    Route::post('updateGambarArtikel', [App\Http\Controllers\ArtikelController::class, 'updateGambarArtikel'])->name('updateGambarArtikel');
+    //Hapus artikel
+    Route::delete('deleteArtikel', [App\Http\Controllers\ArtikelController::class, 'deleteArtikel'])->name('deleteArtikel');
+});
