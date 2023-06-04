@@ -99,9 +99,9 @@ Route::group([
     //Tambah artikel
     Route::post('addArtikel', [App\Http\Controllers\ArtikelController::class, 'addArtikel'])->name('addArtikel');
     //Update artikel
-    Route::post('updateArtikel', [App\Http\Controllers\ArtikelController::class, 'updateArtikel'])->name('updateArtikel');
+    Route::post('updateArtikel/{id}', [App\Http\Controllers\ArtikelController::class, 'updateArtikel'])->name('updateArtikel');
     //Update gambar artikel
-    Route::post('updateGambarArtikel', [App\Http\Controllers\ArtikelController::class, 'updateGambarArtikel'])->name('updateGambarArtikel');
+    Route::post('updateGambarArtikel/{id}', [App\Http\Controllers\ArtikelController::class, 'updateGambarArtikel'])->name('updateGambarArtikel');
     //Hapus artikel
-    Route::delete('deleteArtikel', [App\Http\Controllers\ArtikelController::class, 'deleteArtikel'])->name('deleteArtikel');
+    Route::delete('deleteArtikel/{id}', [App\Http\Controllers\ArtikelController::class, 'deleteArtikel'])->name('deleteArtikel');
 });

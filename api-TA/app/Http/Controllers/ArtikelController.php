@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Artikel;
 
 class ArtikelController extends Controller
 {
-    public function getArtikel($pengajuanId){
+    public function getArtikel(){
         $adminUser = auth()->guard('admin-api')->user();
         $userUser = auth()->guard('user-api')->user();
 
@@ -149,7 +150,7 @@ class ArtikelController extends Controller
         ], 200);
     }
 
-    public function deleteArtikel(Request $id){
+    public function deleteArtikel($id){
         $adminUser = auth()->guard('admin-api')->user();
         if (!$adminUser) {
             return response()->json(['error' => 'Unauthorized'], 401);
