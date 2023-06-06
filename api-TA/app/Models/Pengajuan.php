@@ -26,6 +26,7 @@ class Pengajuan extends Model
         'estimasi_pengembalian',
         'tenor',
         'imbal_hasil',
+        'dana_terkumpul',
         'total_pengembalian',
         'metode_pelunasan',
         'status',
@@ -53,6 +54,17 @@ class Pengajuan extends Model
         }
 
         return 'Investasi ini masih berlangsung. Tersisa ' . $this->day_left;
+    }
+
+    public function updateStatus()
+    {
+        $totalPengajuan = $this->total_pengajuan;
+        $totalDanaTerkumpul = $this->dana_terkumpul;
+
+        if ($totalPengajuan == $totalDanaTerkumpul) {
+            $this->status = 'Proyek Selesai';
+            $this->save();
+        }
     }
 
     public function Users()

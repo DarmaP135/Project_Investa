@@ -44,6 +44,10 @@ class PengajuanController extends Controller
             return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
         }
 
+        foreach ($pengajuan as $p) {
+            $p->updateStatus();
+        }
+
         return response()->json($pengajuan);
     }
 

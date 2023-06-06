@@ -285,11 +285,11 @@ class AuthContoller extends Controller
     {
         try {
         $user = auth()->guard('user-api')->user();
-        
+            
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        
+     
         return response()->json($user);
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return response()->json(['error' => 'Token Expired'], 401);
