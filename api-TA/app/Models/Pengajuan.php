@@ -29,7 +29,7 @@ class Pengajuan extends Model
         'resiko',
         'deskripsi',
         'imbal_hasil',
-        'total_pengembalian',
+        'harga_unit',
         'jumlah_unit',
         'unit_tersedia',
         'dana_terkumpul',
@@ -109,6 +109,11 @@ class Pengajuan extends Model
 
     public function infoPemasukan(){
         return $this->hasOne(InfoPemasukan::class);
+    }
+
+    public function Investasi()
+    {
+        return $this->hasMany(Investasi::class);
     }
     
 }

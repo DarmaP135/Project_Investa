@@ -61,6 +61,10 @@ class PengajuanController extends Controller
 
         $user = $adminUser ? $adminUser : $userUser;
 
+        foreach ($pengajuan as $p) {
+            $p->updateStatus();
+        }
+
         $pengajuan = Pengajuan::where(function ($query) {
             $query->where('status', 'Proyek Berjalan')
                 ->orWhere('status', 'Pendanaan Terpenuhi');

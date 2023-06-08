@@ -112,3 +112,9 @@ Route::group([
     Route::post('deposit', [App\Http\Controllers\WalletController::class, 'deposit'])->name('deposit');
     Route::post('withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('withdraw');
 });
+
+Route::group([
+    'middleware' => 'api', 
+], function ($route){
+    Route::post('/pengajuan/{id}/investasi', [App\Http\Controllers\InvestasiController::class, 'investasi'])->name('investasi');
+});

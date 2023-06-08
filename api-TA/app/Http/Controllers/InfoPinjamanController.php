@@ -58,6 +58,8 @@ class InfoPinjamanController extends Controller
         $pengajuan = Pengajuan::findorfail($id);
 
         $idpengajuan = $pengajuan->id;
+        $imbal_hasil = $pengajuan->imbal_hasil / 100;
+        $totalKeseluruhan = 0;
 
         $infoPinjamanData = $request->input('infoPinjam');
         $infoPinjamanModels = [];
@@ -72,6 +74,8 @@ class InfoPinjamanController extends Controller
             $infoPinjaman->total = $infoPinjamanItem['jumlah'] * $infoPinjamanItem['harga'];
 
             $infoPinjamanModels[] = $infoPinjaman;
+
+            $totalKeseluruhan += $infoPinjaman->total;
         }
 
         $pengajuan->infoPinjaman()->saveMany($infoPinjamanModels);
@@ -89,9 +93,16 @@ class InfoPinjamanController extends Controller
             $file->save();
         }
 
+        $TotalSetelahImbal = $totalKeseluruhan + ($totalKeseluruhan * $imbal_hasil); 
+
+        $pengajuan->total_pengembalian = $TotalSetelahImbal;
+        $pengajuan->save();
+
         return response()->json([
             'message' => 'Info Pinjaman created successfully',
-            'Informasi Pinjaman' => $infoPinjaman
+            'Informasi Pinjaman' => $infoPinjaman,
+            'Total Keseluruhan' => $totalKeseluruhan,
+            "Total Setelah Imbal Hasil" => $TotalSetelahImbal
         ],200);
     }
 
