@@ -25,6 +25,7 @@ return new class extends Migration
             $table->dateTime('estimasi_pengembalian');
             $table->string('tenor');
             $table->integer('imbal_hasil')->nullable();
+            $table->integer('harga_unit')->nullable();
             $table->bigInteger('total_pengembalian')->nullable();
             $table->string('metode_pelunasan');
             $table->string('resiko')->nullable();

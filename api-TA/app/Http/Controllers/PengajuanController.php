@@ -164,7 +164,10 @@ class PengajuanController extends Controller
             ]);
         }
 
-     
+        $pengajuan->total_pengajuan = $totalPengajuan;
+        $pengajuan->save();
+
+        
         $infotani = InfoTani::create([
             'pengajuan_id' => $idinvest,
             'pengalaman_tani' => $request->input('pengalaman_tani'),
@@ -241,12 +244,16 @@ class PengajuanController extends Controller
         }
 
         $pengajuan = Pengajuan::findOrFail($id);
+        $jumlahUnit = $request->input('jumlah_unit');
+        $hargaPerUnit = 10000; // Harga per unit, misalnya 10000
 
         $pengajuan->update([
             'imbal_hasil' => $request->input('imbal_hasil'),
             'status' => $request->input('status'),
             'resiko' => $request->input('resiko'),
-            'jumlah_unit' => $request->input('jumlah_unit'),
+            'jumlah_unit' => $jumlahUnit,
+            'unit_tersedia' => $jumlahUnit,
+            'harga_unit' => $hargaPerUnit,
             'deskripsi' => $request->input('deskripsi')
         ]);
 
