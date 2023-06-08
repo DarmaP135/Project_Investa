@@ -25,7 +25,12 @@ class Pengajuan extends Model
         'end_date',
         'estimasi_pengembalian',
         'tenor',
+        'resiko',
+        'deskripsi',
         'imbal_hasil',
+        'total_pengembalian',
+        'jumlah_unit',
+        'unit_tersedia',
         'dana_terkumpul',
         'total_pengembalian',
         'metode_pelunasan',
@@ -62,12 +67,12 @@ class Pengajuan extends Model
         $totalDanaTerkumpul = $this->dana_terkumpul;
 
         if ($totalPengajuan == $totalDanaTerkumpul) {
-            $this->status = 'Proyek Selesai';
+            $this->status = 'Pendanaan Terpenuhi';
             $this->save();
         }
     }
 
-    public function Users()
+    public function User()
     {
          return $this->belongsTo(User::class);
     }
@@ -81,6 +86,7 @@ class Pengajuan extends Model
     {
         return $this->hasMany(Kebutuhan::class,'pengajuan_id');
     }
+
 
     public function infoPinjaman()
     {

@@ -71,4 +71,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(infoTani::class);
     }
+
+    public function dompet()
+    {
+        return $this->hasOne(wallet::class);
+    }
 }

@@ -105,3 +105,11 @@ Route::group([
     //Hapus artikel
     Route::delete('deleteArtikel/{id}', [App\Http\Controllers\ArtikelController::class, 'deleteArtikel'])->name('deleteArtikel');
 });
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'wallet' 
+], function ($route){
+    Route::post('deposit', [App\Http\Controllers\WalletController::class, 'deposit'])->name('deposit');
+    Route::post('withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('withdraw');
+});

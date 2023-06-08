@@ -61,9 +61,12 @@ class PengajuanController extends Controller
 
         $user = $adminUser ? $adminUser : $userUser;
 
-        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
-            ->where('status','Proyek Berjalan')
-            ->get();
+        $pengajuan = Pengajuan::where(function ($query) {
+            $query->where('status', 'Proyek Berjalan')
+                ->orWhere('status', 'Pendanaan Terpenuhi');
+        })
+        ->with('kebutuhan', 'files', 'user')
+        ->get();
 
         if ($pengajuan->isEmpty()) {
             return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
@@ -278,7 +281,7 @@ class PengajuanController extends Controller
         ]);
 
         // Mengambil data pengajuan dengan relasi yang terkait
-        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'user')
             ->findOrFail($id);
 
         return response()->json([
@@ -311,7 +314,7 @@ class PengajuanController extends Controller
         $pengajuan->save();
 
         // Mengambil data pengajuan dengan relasi yang terkait
-        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'user')
             ->findOrFail($id);
 
         return response()->json([
