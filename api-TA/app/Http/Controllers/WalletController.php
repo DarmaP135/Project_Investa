@@ -21,14 +21,30 @@ class WalletController extends Controller
             'jumlah_deposit' => 'required|numeric',
             'pilih_pembayaran' => 'required|string',
             'pilih_bank' => 'required|string',
-            'nama_bank' => 'required|string',
-            'nama_rekening' => 'required|string',
-            'nomor_rekening' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+
+        $nama_bank = '';
+        $nama_rekening = '';
+        $nomor_rekening = '';
+
+        if ($request->input('pilih_bank') === 'BCA') {
+            $nama_bank = 'Bank BCA';
+            $nama_rekening = $user->name; // Menggunakan nama pengguna sebagai nama rekening
+            $nomor_rekening = 'BCA' . mt_rand(1000000000, 9999999999); // Menggunakan angka acak sebagai nomor rekening BCA
+        } elseif ($request->input('pilih_bank') === 'BNI') {
+            $nama_bank = 'Bank BNI';
+            $nama_rekening = $user->name; // Menggunakan nama pengguna sebagai nama rekening
+            $nomor_rekening = 'BNI' . mt_rand(1000000000, 9999999999); // Menggunakan angka acak sebagai nomor rekening BNI
+        } elseif ($request->input('pilih_bank') === 'BRI') {
+            $nama_bank = 'Bank BRI';
+            $nama_rekening = $user->name; // Menggunakan nama pengguna sebagai nama rekening
+            $nomor_rekening = 'BRI' . mt_rand(1000000000, 9999999999); // Menggunakan angka acak sebagai nomor rekening BRI
+        }
+        
 
         try {
             $deposit = Wallet::create([
@@ -38,9 +54,9 @@ class WalletController extends Controller
                 'jumlah_deposit' => $request->input('jumlah_deposit'),
                 'pilih_pembayaran' => $request->input('pilih_pembayaran'),
                 'pilih_bank' => $request->input('pilih_bank'),
-                'nama_bank' => $request->input('nama_bank'),
-                'nama_rekening' => $request->input('nama_rekening'),
-                'nomor_rekening' => $request->input('nomor_rekening'),
+                'nama_bank' => $nama_bank,
+                'nama_rekening' => $nama_rekening,
+                'nomor_rekening' => $nomor_rekening,
             ]);
 
             $user->saldo += $request->jumlah_deposit;

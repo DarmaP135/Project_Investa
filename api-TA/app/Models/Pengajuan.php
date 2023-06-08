@@ -67,7 +67,7 @@ class Pengajuan extends Model
         $totalPengajuan = $this->total_pengajuan;
         $totalDanaTerkumpul = $this->dana_terkumpul;
 
-        if ($totalPengajuan == $totalDanaTerkumpul) {
+        if ($totalDanaTerkumpul >= $totalPengajuan) {
             $this->status = 'Pendanaan Terpenuhi';
             $this->save();
         }

@@ -26,9 +26,19 @@ class InfoPinjamanController extends Controller
         $infoPinjaman = $pengajuan->infoPinjaman()->get();
         $fileInfoPinjaman = $pengajuan->filepinjam()->get();
 
+        $totalKeseluruhan = 0;
+        foreach ($infoPinjaman as $info) {
+            $totalKeseluruhan += $info->total;
+        }
+
+        $imbal_hasil = $pengajuan->imbal_hasil / 100;
+        $TotalSetelahImbal = $totalKeseluruhan + ($totalKeseluruhan * $imbal_hasil);
+
         return response()->json([
             'Info Pinjaman' => $infoPinjaman,
-            'File Info Pinjaman' => $fileInfoPinjaman
+            'File Info Pinjaman' => $fileInfoPinjaman,
+            'Total Keseluruhan' => $totalKeseluruhan,
+            'Total Setelah Imbal' => $TotalSetelahImbal
         ], 200);
     
     }

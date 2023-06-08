@@ -117,4 +117,6 @@ Route::group([
     'middleware' => 'api', 
 ], function ($route){
     Route::post('/pengajuan/{id}/investasi', [App\Http\Controllers\InvestasiController::class, 'investasi'])->name('investasi');
+    Route::post('/pengajuan/{id}/simulasi-hitung', [App\Http\Controllers\PengajuanController::class, 'simulasiHitung'])->name('simulasiHitung');
+    Route::get('/investasi/{userId}/getInvestasi', [App\Http\Controllers\InvestasiController::class, 'getInvestasi'])->name('getInvestasi');
 });
