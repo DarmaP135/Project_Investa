@@ -67,10 +67,6 @@ class User extends Authenticatable implements JWTSubject
          return $this->hasMany(Pengajuan::class, 'user_id');
     }
 
-    public function infoTani()
-    {
-        return $this->hasOne(infoTani::class);
-    }
 
     public function dompet()
     {

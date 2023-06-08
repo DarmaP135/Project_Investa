@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('info_tanis', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('pengajuan_id');
             $table->string('pengalaman_tani')->nullable();
             $table->string('kelompok_tani')->nullable();
             $table->string('nama_kelompok')->nullable();
@@ -29,6 +28,8 @@ return new class extends Migration
             $table->string('kode_pos')->nullable();
             $table->string('alamat')->nullable();
             $table->timestamps();
+
+            $table->foreign('pengajuan_id')->references('id')->on('pengajuans')->onDelete('cascade');
         });
     }
 

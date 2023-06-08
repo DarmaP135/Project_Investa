@@ -9,7 +9,7 @@ class InfoTani extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
+        'pengajuan_id',
         'pengalaman_tani',
         'kelompok_tani',
         'nama_kelompok',
@@ -23,8 +23,8 @@ class InfoTani extends Model
         'alamat',
     ];
 
-    public function user()
+    public function pengajuan()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Pengajuan::class);
     }
 }

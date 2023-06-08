@@ -75,27 +75,6 @@ class PengajuanController extends Controller
         return response()->json($pengajuan);
     }
 
-    
-    public function pengajuanFinish(){ 
-        $adminUser = auth()->guard('admin-api')->user();
-        $userUser = auth()->guard('user-api')->user();
-
-        if (!$adminUser && !$userUser) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        $user = $adminUser ? $adminUser : $userUser;
-
-        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
-            ->where('status','Proyek Selesai')
-            ->get();
-
-        if ($pengajuan->isEmpty()) {
-            return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
-        }
-
-        return response()->json($pengajuan);
-    }
 
 
     //Petani 
@@ -185,27 +164,21 @@ class PengajuanController extends Controller
             ]);
         }
 
-        $pengajuan->total_pengajuan = $totalPengajuan;
-        $pengajuan->save();
-
-        $infotani = InfoTani::where('user_id', $user->id)->first();
-        if (!$infotani) {
-            $infotani = new InfoTani();
-            $infotani->user_id = $user->id;
-        }
-
-        $infotani->pengalaman_tani = $request->input('pengalaman_tani');
-        $infotani->kelompok_tani = $request->input('kelompok_tani');
-        $infotani->nama_kelompok = $request->input('nama_kelompok');
-        $infotani->jumlah_anggota = $request->input('jumlah_anggota');
-        $infotani->status_lahan = $request->input('status_lahan');
-        $infotani->luas_lahan = $request->input('luas_lahan');
-        $infotani->provinsi = 'Jawa TImur';  //Contoh 
-        $infotani->kota = 'Nganjuk';        //Contoh
-        $infotani->kecamatan = $request->input('kecamatan');
-        $infotani->kode_pos = $request->input('kode_pos');
-        $infotani->alamat = $request->input('alamat');
-        $infotani->save();
+     
+        $infotani = InfoTani::create([
+            'pengajuan_id' => $idinvest,
+            'pengalaman_tani' => $request->input('pengalaman_tani'),
+            'kelompok_tani' => $request->input('kelompok_tani'),
+            'nama_kelompok' => $request->input('nama_kelompok'),
+            'jumlah_anggota' => $request->input('jumlah_anggota'),
+            'status_lahan' => $request->input('status_lahan'),
+            'luas_lahan' => $request->input('luas_lahan'),
+            'provinsi' => 'Jawa Timur',
+            'kota' => 'Nganjuk',
+            'kecamatan' => $request->input('kecamatan'),
+            'kode_pos' => $request->input('kode_pos'),
+            'alamat' => $request->input('alamat'),
+        ]);
 
 
 
@@ -232,18 +205,15 @@ class PengajuanController extends Controller
 
         $user = $adminUser ? $adminUser : $userUser;
 
-        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'users')
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'user', 'infoTani')
             ->findOrFail($id);
 
         if (!$pengajuan) {
             return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
         }
 
-        $informasiTani = $user->infoTani;
-
         return response()->json([
             'Pengajuan' => $pengajuan,
-            'Informasi Petani' => $informasiTani
         ],200);
 
     }

@@ -63,7 +63,6 @@ Route::group([
 
     //getPengajuan yang sudah diacc dengan status "Proyek Berjalan"
     Route::get('pengajuanAccept', [App\Http\Controllers\PengajuanController::class, 'pengajuanAccept'])->name('pengajuanAccept');
-    Route::get('pengajuanFinish', [App\Http\Controllers\PengajuanController::class, 'pengajuanAccept'])->name('pengajuanFinish');
     
     Route::post('addPengajuan', [App\Http\Controllers\PengajuanController::class, 'addPengajuan'])->name('addPengajuan');
     Route::post('detailPengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'detailPengajuan'])->name('detailPengajuan');

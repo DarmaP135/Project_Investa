@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\InfoPinjaman;
 use App\Models\InfoKunjungan;
 use App\Models\InfoPemasukan;
+use App\Models\infoTani;
 use App\Models\Kebutuhan;
 
 class Pengajuan extends Model
@@ -87,6 +88,10 @@ class Pengajuan extends Model
         return $this->hasMany(Kebutuhan::class,'pengajuan_id');
     }
 
+    public function infoTani()
+    {
+        return $this->hasOne(infoTani::class);
+    }
 
     public function infoPinjaman()
     {
