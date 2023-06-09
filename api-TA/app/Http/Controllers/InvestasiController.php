@@ -166,4 +166,19 @@ class InvestasiController extends Controller
         return response()->json($result, 200);
     }
 
+    public function totalInvesAktif(){
+
+        $userUser = auth()->guard('user-api')->user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $total = Investasi::where('status', 'proyek berjalan')
+                      ->where('user_id', $user->id)
+                      ->sum('nominal');
+
+        return response()->json(['total' => $total]);
+    }
+
 }
