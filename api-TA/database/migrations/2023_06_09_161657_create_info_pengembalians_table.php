@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('nomor_rekening')->nullable();
             $table->string('deskripsi');
             $table->string('status');
-            $table->string('photo');
+            $table->string('photo')->nullable();
             $table->timestamps();
 
             $table->foreign('pengajuan_id')->references('id')->on('pengajuans')->onDelete('cascade');
