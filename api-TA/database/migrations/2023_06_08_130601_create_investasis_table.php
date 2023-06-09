@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('amount');
             $table->integer('unit');
+            $table->string('status')->nullable();
             $table->timestamps();
 
         });

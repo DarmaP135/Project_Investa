@@ -93,6 +93,7 @@ class InvestasiController extends Controller
                 'unit' => $unit,
                 'user_id' => $iduser,
                 'pengajuan_id' => $pengajuanId,
+                'status' => 'Proyek Berjalan'
             ]);
 
             // Simpan investasi terkait dengan pengajuan

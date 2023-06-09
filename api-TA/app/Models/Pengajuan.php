@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\InfoPinjaman;
 use App\Models\InfoKunjungan;
 use App\Models\InfoPemasukan;
+use App\Models\InfoPengembalian;
 use App\Models\infoTani;
 use App\Models\Kebutuhan;
 
@@ -109,6 +110,10 @@ class Pengajuan extends Model
 
     public function infoPemasukan(){
         return $this->hasOne(InfoPemasukan::class);
+    }
+
+    public function infoPengembalian(){
+        return $this->hasOne(InfoPengembalian::class);
     }
 
     public function Investasi()
