@@ -29,7 +29,7 @@ class InfoPengembalianController extends Controller
 
         return response()->json($infoPengembalian, 200);
     }
-    public function addInfoPengembalian(Request $request, $id){
+    public function addInfoPengembalianPetani(Request $request, $id){
 
         $user = auth()->guard('user-api')->user();
         if (!$user) {

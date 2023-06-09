@@ -85,6 +85,10 @@ Route::group([
     //Form Transaksi Info Pemasukan
     Route::get('{id}/getInfoPemasukan', [App\Http\Controllers\InfoPemasukanController::class, 'getInfoPemasukan'])->name('getInfoPemasukan');
     Route::post('{id}/addInfoPemasukan', [App\Http\Controllers\InfoPemasukanController::class, 'addInfoPemasukan'])->name('addInfoPemasukan');
+
+    Route::get('{id}/getInfoPengembalian', [App\Http\Controllers\InfoPemasukanController::class, 'getInfoPengembalian'])->name('getInfoPengembalian');
+    Route::post('{id}/addInfoPengembalianPetani', [App\Http\Controllers\InfoPengembalianController::class, 'addInfoPengembalianPetani'])->name('addInfoPengembalianPetani');
+    
     
 });
 
