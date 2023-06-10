@@ -20,7 +20,7 @@ class PengajuanController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $pengajuan = Pengajuan::with('files', 'kebutuhan')
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'infoTani')
             ->where('user_id', $user->id)
             ->get();
 
