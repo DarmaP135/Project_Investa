@@ -37,7 +37,7 @@ class PengajuanController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $pengajuan = Pengajuan::with('files', 'kebutuhan')
+        $pengajuan = Pengajuan::with('files', 'kebutuhan', 'infoTani')
             ->get();
 
         if ($pengajuan->isEmpty()) {
@@ -69,7 +69,7 @@ class PengajuanController extends Controller
             $query->where('status', 'Proyek Berjalan')
                 ->orWhere('status', 'Pendanaan Terpenuhi');
         })
-        ->with('kebutuhan', 'files', 'user')
+        ->with('kebutuhan', 'files', 'user', 'infoTani')
         ->get();
 
         if ($pengajuan->isEmpty()) {
