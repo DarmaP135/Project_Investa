@@ -54,7 +54,7 @@ class InfoPengembalianController extends Controller
         $totalPengembalian = $pengajuan->total_pengembalian;
 
         try {
-            $infoPengembalian = InfoKunjungan::create([
+            $infoPengembalian = InfoPengembalian::create([
             'pengajuan_id' => $pengajuan->id,
             'jumlah_pembayaran' => $totalPengembalian,
             'pilih_pembayaran' => $request->input('pilih_pembayaran'),
