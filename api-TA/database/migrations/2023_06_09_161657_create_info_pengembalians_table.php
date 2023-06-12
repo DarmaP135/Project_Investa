@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('info_pengembalians', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('pengajuan_id');
             $table->bigInteger('jumlah_pembayaran');
             $table->string('pilih_pembayaran');

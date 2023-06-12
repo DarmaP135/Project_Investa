@@ -37,7 +37,6 @@ class InfoPengembalianController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'jumlah_pembayaran' => 'required|numeric',
             'pilih_pembayaran' => 'required|string',
             'nama_bank' => 'required|string',
             'nama_rekening' => 'required|string',

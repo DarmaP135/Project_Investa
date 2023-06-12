@@ -11,7 +11,7 @@ class InfoPengembalian extends Model
     protected $fillable = [
         'pengajuan_id',
         'jumlah_pembayaran',
-        'pilihan_pembayaran',
+        'pilih_pembayaran',
         'nama_bank',
         'nama_rekening',
         'nomor_rekening',
