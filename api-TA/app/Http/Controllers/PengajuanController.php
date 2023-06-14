@@ -61,7 +61,6 @@ class PengajuanController extends Controller
 
         $user = $adminUser ? $adminUser : $userUser;
 
-        
 
         $pengajuan = Pengajuan::where(function ($query) {
             $query->where('status', 'Proyek Berjalan')
@@ -71,14 +70,15 @@ class PengajuanController extends Controller
         ->with('kebutuhan', 'files', 'user', 'infoTani')
         ->get();
 
+        foreach ($pengajuan as $p) {
+            $p->updateStatus();
+        }
+        
         if ($pengajuan->isEmpty()) {
             return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
         }
 
-        foreach ($pengajuan as $p) {
-            $p->updateStatus();
-        }
-
+       
         return response()->json($pengajuan);
     }
 

@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 //Admin Auth
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['api', 'cors'],
     'prefix' => 'admin'
 ], function ($router) {
     Route::post('adminregister', [App\Http\Controllers\AdminController::class,'adminregister'])->name('adminregister');
@@ -33,7 +33,7 @@ Route::group([
 
 //User Auth
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['api', 'cors'],
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('petaniregister', [App\Http\Controllers\AuthContoller::class,'petaniregister'])->name('petaniregister');
@@ -51,7 +51,7 @@ Route::group([
 
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['api', 'cors'],
     'prefix' => 'pengajuan' 
 ], function ($route){
 
@@ -94,7 +94,7 @@ Route::group([
 
 //Artikel
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['api', 'cors'],
     'prefix' => 'artikel'
 ], function ($router) {
     //Ambil semua artikel 
@@ -110,7 +110,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => ['api', 'cors'],
     'prefix' => 'wallet' 
 ], function ($route){
     Route::post('deposit', [App\Http\Controllers\WalletController::class, 'deposit'])->name('deposit');
@@ -118,10 +118,17 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'api', 
+    'middleware' => ['api', 'cors'], 
 ], function ($route){
     Route::post('/pengajuan/{id}/investasi', [App\Http\Controllers\InvestasiController::class, 'investasi'])->name('investasi');
     Route::post('/pengajuan/{id}/simulasi-hitung', [App\Http\Controllers\PengajuanController::class, 'simulasiHitung'])->name('simulasiHitung');
     Route::get('/investasi/{userId}/getInvestasi', [App\Http\Controllers\InvestasiController::class, 'getInvestasi'])->name('getInvestasi');
     Route::get('/investasi/total', [App\Http\Controllers\InvestasiController::class, 'totalInvesAktif'])->name('totalInvesAktif');
+});
+
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'tracking' 
+], function ($route){
+    Route::get('getInvestor', [App\Http\Controllers\InvestasiController::class, 'getInvestor'])->name('getInvestor');
 });

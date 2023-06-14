@@ -37,6 +37,25 @@ class InvestasiController extends Controller
         ], 200);
     }
 
+    public function getInvestor()
+    {
+       $user = auth()->guard('admin-api')->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $investasi = Investasi::with('pengajuan', 'user')->get();
+
+        if ($investasi->isEmpty()) {
+            return response()->json(['error' => 'Investasi not found'], 404);
+        }
+
+        return response()->json([
+            'investasi' => $investasi,
+        ], 200);
+    }
+
+
 
     public function investasi(Request $request, $id)
     {
