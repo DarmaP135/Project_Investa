@@ -131,4 +131,5 @@ Route::group([
     'prefix' => 'tracking' 
 ], function ($route){
     Route::get('getInvestor', [App\Http\Controllers\InvestasiController::class, 'getInvestor'])->name('getInvestor');
+    Route::get('getProyek', [App\Http\Controllers\PengajuanController::class, 'getProyek'])->name('getProyek');
 });

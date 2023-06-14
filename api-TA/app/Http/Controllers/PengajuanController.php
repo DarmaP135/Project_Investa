@@ -31,6 +31,31 @@ class PengajuanController extends Controller
         return response()->json($pengajuan);
     }
 
+    public function getProyek(){
+        $user = auth()->guard('admin-api')->user();
+        if (!$user) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $pengajuan = Pengajuan::where(function ($query) {
+            $query->where('status', 'Proyek Berjalan')
+                ->orWhere('status', 'Pendanaan Terpenuhi');
+        })
+        
+        ->with('kebutuhan', 'files', 'user', 'infoTani')
+        ->get();
+
+        if ($pengajuan->isEmpty()) {
+            return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
+        }
+
+        foreach ($pengajuan as $p) {
+            $p->updateStatus();
+        }
+
+        return response()->json($pengajuan);
+    }
+
     public function getPengajuanSeluruhnya(){
         $user = auth()->guard('admin-api')->user();
         if (!$user) {
@@ -73,7 +98,7 @@ class PengajuanController extends Controller
         foreach ($pengajuan as $p) {
             $p->updateStatus();
         }
-        
+
         if ($pengajuan->isEmpty()) {
             return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
         }
