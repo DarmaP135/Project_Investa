@@ -98,23 +98,30 @@ class AuthContoller extends Controller
      public function login()
     {
         $validator = Validator::make(request()->all(), [
-
             'email'     => 'required|email',
             'password'  => 'required',
-            
         ]);
-        //if validation fails
+
+        // If validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->guard('user-api')->attempt($credentials)) {
+        $adminGuard = auth()->guard('admin-api');
+        $userGuard = auth()->guard('user-api');
+
+        $adminUser = $adminGuard->attempt($credentials);
+        $userUser = $userGuard->attempt($credentials);
+
+        if (!$adminUser && !$userUser) {
             return response()->json(['error' => 'Email atau Password Salah'], 401);
         }
 
-        $user = auth()->guard('user-api')->user();
+        $guard = $adminUser ? 'admin-api' : 'user-api';
+        $user = auth()->guard($guard)->user();
+        $token = auth()->guard($guard)->attempt($credentials);
 
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
@@ -123,7 +130,7 @@ class AuthContoller extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->guard('user-api')->factory()->getTTL() * 60,
+            'expires_in' => auth()->guard($guard)->factory()->getTTL() * 60,
             'user' => $user
         ]);
     }
