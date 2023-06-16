@@ -10,6 +10,21 @@ use App\Models\User;
 
 class WalletController extends Controller
 {
+    
+    public function totalAset(){
+        $user = auth()->guard('user-api')->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return response()->json([
+            'id_user' => $user->id,
+            'nama_user' => $user->name,
+            'total_asset' => $user->saldo]
+        );
+        
+    }
+
     public function deposit(Request $request)
     {
         $user = auth()->guard('user-api')->user();

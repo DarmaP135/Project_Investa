@@ -11,7 +11,7 @@ use App\Models\InfoPengembalian;
 class InfoPengembalianController extends Controller
 {
 
-    public function getInfoPengembalian(){
+    public function getInfoPengembalian($pengajuanId){
         $adminUser = auth()->guard('admin-api')->user();
         $userUser = auth()->guard('user-api')->user();
 
@@ -26,6 +26,10 @@ class InfoPengembalianController extends Controller
         }
 
         $infoPengembalian = $pengajuan->infoPengembalian()->get();
+
+        if ($infoPengembalian->isEmpty()) {
+            return response()->json(['error' => 'Belum Memiliki Info Pengembalian'], 404);
+        }
 
         return response()->json($infoPengembalian, 200);
     }

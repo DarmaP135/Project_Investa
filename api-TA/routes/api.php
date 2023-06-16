@@ -86,7 +86,7 @@ Route::group([
     Route::get('{id}/getInfoPemasukan', [App\Http\Controllers\InfoPemasukanController::class, 'getInfoPemasukan'])->name('getInfoPemasukan');
     Route::post('{id}/addInfoPemasukan', [App\Http\Controllers\InfoPemasukanController::class, 'addInfoPemasukan'])->name('addInfoPemasukan');
 
-    Route::get('{id}/getInfoPengembalian', [App\Http\Controllers\InfoPemasukanController::class, 'getInfoPengembalian'])->name('getInfoPengembalian');
+    Route::get('{id}/getInfoPengembalian', [App\Http\Controllers\InfoPengembalianController::class, 'getInfoPengembalian'])->name('getInfoPengembalian');
     Route::post('{id}/addInfoPengembalianPetani', [App\Http\Controllers\InfoPengembalianController::class, 'addInfoPengembalianPetani'])->name('addInfoPengembalianPetani');
     
     
@@ -115,6 +115,8 @@ Route::group([
 ], function ($route){
     Route::post('deposit', [App\Http\Controllers\WalletController::class, 'deposit'])->name('deposit');
     Route::post('withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('withdraw');
+    Route::post('totalAset', [App\Http\Controllers\WalletController::class, 'totalAset'])->name('totalAset');
+    
 });
 
 Route::group([
