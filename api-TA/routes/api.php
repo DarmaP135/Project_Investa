@@ -135,3 +135,21 @@ Route::group([
     Route::get('getInvestor', [App\Http\Controllers\InvestasiController::class, 'getInvestor'])->name('getInvestor');
     Route::get('getProyek', [App\Http\Controllers\PengajuanController::class, 'getProyek'])->name('getProyek');
 });
+
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'akun' 
+], function ($route){
+    Route::get('getInvestor', [App\Http\Controllers\AdminController::class, 'getInvestor'])->name('getInvestor');
+    Route::get('getPetani', [App\Http\Controllers\AdminController::class, 'getPetani'])->name('getPetani');
+    Route::post('deleteAkun/{id}', [App\Http\Controllers\AdminController::class, 'deleteAkun'])->name('deleteAkun');
+});
+
+Route::group([
+    'middleware' => ['api', 'cors'],
+    'prefix' => 'dashboard' 
+], function ($route){
+    Route::get('totalPetani', [App\Http\Controllers\AdminController::class, 'totalPetani'])->name('totalPetani');
+    Route::get('totalInvestor', [App\Http\Controllers\AdminController::class, 'totalInvestor'])->name('totalInvestor');
+    Route::get('totalDana', [App\Http\Controllers\AdminController::class, 'totalDana'])->name('totalDana');
+});

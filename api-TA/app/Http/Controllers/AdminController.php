@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\User;
+use App\Models\Investasi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -109,5 +111,100 @@ class AdminController extends Controller
             'expires_in' => auth()->guard('admin-api')->factory()->getTTL() * 60,
         ]);
     }
+
+    public function getInvestor()
+    {
+        $user = auth()->guard('admin-api')->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $investors = User::where('tipeAkun', 'Investor')->get();
+
+        return response()->json([
+            'investor' => $investors
+        ]);
+    }
+
+
+
+    public function totalInvestor()
+    {
+        $user = auth()->guard('admin-api')->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $totalInvestors = User::where('tipeAkun', 'Investor')->count();
+
+        return response()->json([
+            'total_investor' => $totalInvestors
+        ]);
+    }
+
+    public function getPetani()
+    {
+        $user = auth()->guard('admin-api')->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $petani = User::where('tipeAkun', 'Petani')->get();
+
+        return response()->json([
+            'petani' => $petani
+        ]);
+    }
+
+    public function totalPetani()
+    {
+        $user = auth()->guard('admin-api')->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $totalPetani = User::where('tipeAkun', 'Petani')->count();
+
+        return response()->json([
+            'total_petani' => $totalPetani
+        ]);
+    }
+
+    public function totalDana(){
+        $user = auth()->guard('admin-api')->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $totalDana = Investasi::sum('amount');
+
+        return response()->json(['total_dana' => $totalDana]);
+    }
+
+    public function deleteAkun($id)
+    {
+        $user = auth()->guard('admin-api')->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $userToDelete = User::find($id);
+
+        if (!$userToDelete) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Hapus akun user
+        $userToDelete->delete();
+
+        return response()->json(['message' => 'User account deleted successfully']);
+    }
+
 
 }

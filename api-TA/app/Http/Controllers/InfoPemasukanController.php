@@ -58,7 +58,7 @@ class InfoPemasukanController extends Controller
             ]);
 
             return response()->json([
-                'message' => 'Info kunjungan berhasil ditambahkan',
+                'message' => 'Info pemasukan berhasil ditambahkan',
                 'info_pemasukan' => $infoPemasukan
             ], 200);
         } catch (Exception $e) {
