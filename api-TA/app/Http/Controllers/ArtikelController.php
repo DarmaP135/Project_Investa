@@ -80,7 +80,6 @@ class ArtikelController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string',
             'sub_judul' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg',
             'deskripsi' => 'required|string',
             'tanggal_upload' => 'required|date|before_or_equal:today',
         ]);
@@ -116,10 +115,6 @@ class ArtikelController extends Controller
         if (!$adminUser) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
-        $validator = Validator::make($request->all(), [
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg',
-        ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
