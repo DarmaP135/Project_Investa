@@ -34,7 +34,7 @@ class ArtikelController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string',
             'sub_judul' => 'required|string',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg',
+            'gambar' => 'image|mimes:jpeg,png,jpg',
             'deskripsi' => 'required|string',
             'tanggal_upload' => 'required|date|before_or_equal:today',
         ]);
@@ -80,7 +80,7 @@ class ArtikelController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string',
             'sub_judul' => 'required|string',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg',
+            'gambar' => 'image|mimes:jpeg,png,jpg',
             'deskripsi' => 'required|string',
             'tanggal_upload' => 'required|date|before_or_equal:today',
         ]);
@@ -118,7 +118,7 @@ class ArtikelController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'gambar' => 'required|image|mimes:jpeg,png,jpg',
+            'gambar' => 'image|mimes:jpeg,png,jpg',
         ]);
 
         if ($validator->fails()) {
