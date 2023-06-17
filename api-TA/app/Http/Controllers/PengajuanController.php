@@ -358,4 +358,29 @@ class PengajuanController extends Controller
 
         return response()->json(['message' => 'Pengajuan deleted successfully']);
     }
+
+    public function formTransaksi($id){
+        $adminUser = auth()->guard('admin-api')->user();
+        $userUser = auth()->guard('user-api')->user();
+
+        if (!$adminUser && !$userUser) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $user = $adminUser ? $adminUser : $userUser;
+
+        $pengajuan = Pengajuan::find($id);
+
+        if (!$pengajuan) {
+            return response()->json(['error' => 'Pengajuan not found'], 404);
+        }
+
+        return response()->json([
+            'user' => $user,
+            'pengajuan_id' => $pengajuan->id,
+            'pengajuan' => $pengajuan
+        ], 200);
+
+    }
+
 }

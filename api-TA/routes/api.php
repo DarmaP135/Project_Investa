@@ -70,6 +70,9 @@ Route::group([
     Route::post('rejectPengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'rejectPengajuan'])->name('rejectPengajuan');
     Route::post('deletePengajuan/{id}', [App\Http\Controllers\PengajuanController::class, 'deletePengajuan'])->name('deletePengajuan');
 
+    //Form Transaksi 
+    Route::get('{id}/formTransaksi', [App\Http\Controllers\PengajuanController::class, 'formTransaksi'])->name('formTransaksi');
+
     //Form Transaksi Info Pinjaman
     Route::get('{id}/getInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'getInfoPinjam'])->name('getInfoPinjam');
     Route::post('{id}/addInfoPinjam', [App\Http\Controllers\InfoPinjamanController::class, 'addInfoPinjam'])->name('addInfoPinjam');
