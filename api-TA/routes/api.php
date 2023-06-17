@@ -88,7 +88,7 @@ Route::group([
 
     Route::get('{id}/getInfoPengembalian', [App\Http\Controllers\InfoPengembalianController::class, 'getInfoPengembalian'])->name('getInfoPengembalian');
     Route::post('{id}/addInfoPengembalianPetani', [App\Http\Controllers\InfoPengembalianController::class, 'addInfoPengembalianPetani'])->name('addInfoPengembalianPetani');
-    
+    Route::post('{id}/addPengembalianAdmin', [App\Http\Controllers\InfoPengembalianController::class, 'addInfoPengembalianAdmin'])->name('addInfoPengembalianAdmin');
     
 });
 
@@ -134,6 +134,8 @@ Route::group([
 ], function ($route){
     Route::get('getInvestor', [App\Http\Controllers\InvestasiController::class, 'getInvestor'])->name('getInvestor');
     Route::get('getProyek', [App\Http\Controllers\PengajuanController::class, 'getProyek'])->name('getProyek');
+    Route::post('{id}/pengembalian',  [App\Http\Controllers\InvestasiController::class, 'pengembalianInvestor'])->name('pengembalianInvestor');
+
 });
 
 Route::group([

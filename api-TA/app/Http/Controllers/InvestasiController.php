@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pengajuan;
+use App\Models\FilePengajuan;
 use App\Models\User;
 use App\Models\Investasi;
 use Illuminate\Support\Facades\Validator;
@@ -28,12 +29,17 @@ class InvestasiController extends Controller
         }
 
         $pengajuanIds = $investasi->pluck('pengajuan_id');
-        $pengajuan = Pengajuan::whereIn('id', $pengajuanIds)->get();
+        $pengajuan = Pengajuan::with('files')->whereIn('id', $pengajuanIds)->get();
+
+        $pengajuanData = $pengajuan->map(function ($item) {
+            return $item->files->pluck('alamat_gambar');
+        });
 
         return response()->json([
             'user_id' => $user->id,
             'investasi' => $investasi,
             'pengajuan' => $pengajuan,
+            'pengajuan_data' => $pengajuanData,
         ], 200);
     }
 
@@ -198,6 +204,53 @@ class InvestasiController extends Controller
                       ->sum('nominal');
 
         return response()->json(['total' => $total]);
+    }
+
+    public function pengembalianInvestor(Request $request, $id){
+        $adminUser = auth()->guard('admin-api')->user();
+
+        if (!$adminUser) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Ambil data investasi berdasarkan ID
+        $investasi = Investasi::find($id);
+
+        if (!$investasi) {
+            return response()->json(['error' => 'Investasi not found'], 404);
+        }
+
+        // Ubah status investasi menjadi "sukses"
+        $investasi->status = 'sukses';
+        $investasi->save();
+
+        // Ambil jumlah amount dari investasi
+        $amount = $investasi->amount;
+
+        // Ambil data pengajuan terkait
+        $pengajuan = Pengajuan::find($investasi->pengajuan_id);
+
+        $imbal_hasil = $pengajuan->imbal_hasil / 100;
+        $totalInvest = $amount + ($amount * $imbal_hasil);
+
+        // Lakukan pengembalian saldo investor
+        $investor = User::find($investasi->user_id);
+
+        if (!$investor) {
+            return response()->json(['error' => 'Investor not found'], 404);
+        }
+
+        $investor->saldo += $totalInvest;
+        $investor->save();
+
+        return response()->json([
+            'message' => 'Pengembalian investor berhasil',
+            'jumlah investasi' => $amount,
+            'total investasi' => $totalInvest,
+            'investor' => $investor,
+            'investasi' => $investasi
+        ]);
+
     }
 
 }

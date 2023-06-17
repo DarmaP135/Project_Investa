@@ -33,6 +33,7 @@ class InfoPengembalianController extends Controller
 
         return response()->json($infoPengembalian, 200);
     }
+
     public function addInfoPengembalianPetani(Request $request, $id){
 
         $user = auth()->guard('user-api')->user();
@@ -77,6 +78,44 @@ class InfoPengembalianController extends Controller
                 // Menambahkan field photo ke data yang akan diubah
                 $infoPengembalian->photo = $imageName;
             }
+
+            $infoPengembalian->save();
+
+            return response()->json([
+                'message' => 'Info pengembalian berhasil ditambahkan',
+                'info pengembalian' => $infoPengembalian
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Gagal menyimpan data'], 500);
+        }
+    }
+
+    public function addInfoPengembalianAdmin(Request $request, $id){
+
+        $user = auth()->guard('admin-api')->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'deskripsi' => 'required|string',
+            'status' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $pengajuan = Pengajuan::findOrFail($id);
+
+
+        try {
+            $infoPengembalian = InfoPengembalian::create([
+            'pengajuan_id' => $pengajuan->id,
+            'deskripsi' => $request->input('deskripsi'),
+            'status' => $request->input('status'),
+                
+            ]);
 
             $infoPengembalian->save();
 
