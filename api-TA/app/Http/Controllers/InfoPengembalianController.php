@@ -43,9 +43,6 @@ class InfoPengembalianController extends Controller
 
         $validator = Validator::make($request->all(), [
             'pilih_pembayaran' => 'required|string',
-            'nama_bank' => 'required|string',
-            'nama_rekening' => 'required|string',
-            'nomor_rekening' => 'required|numeric', 
             'photo' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
