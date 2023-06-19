@@ -57,7 +57,6 @@ class InfoPinjamanController extends Controller
             'infoPinjam.*.barang' => 'required|string',
             'infoPinjam*.jumlah' => 'required|numeric',
             'infoPinjam.*.harga' => 'required|numeric',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
         if ($validator->fails()) {

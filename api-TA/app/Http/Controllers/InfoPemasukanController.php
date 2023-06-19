@@ -57,6 +57,9 @@ class InfoPemasukanController extends Controller
                 'harga' => $request->input('harga'), 
             ]);
 
+            $pengajuan->status = 'Proyek Selesai';
+            $pengajuan->save();
+
             return response()->json([
                 'message' => 'Info pemasukan berhasil ditambahkan',
                 'info_pemasukan' => $infoPemasukan

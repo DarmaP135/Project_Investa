@@ -50,7 +50,7 @@ class InvestasiController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $investasi = Investasi::with('pengajuan', 'user')->get();
+        $investasi = Investasi::with('pengajuan', 'user')->where('status', 'Proyek Berjalan')->get();
 
         if ($investasi->isEmpty()) {
             return response()->json(['error' => 'Investasi not found'], 404);
