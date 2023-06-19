@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('info_pengembalians', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pengajuan_id');
-            $table->bigInteger('jumlah_pembayaran');
-            $table->string('pilih_pembayaran');
+            $table->bigInteger('jumlah_pembayaran')->nullable();
+            $table->string('pilih_pembayaran')->nullable();
             $table->string('nama_bank')->nullable();
             $table->string('nama_rekening')->nullable();
             $table->string('nomor_rekening')->nullable();
