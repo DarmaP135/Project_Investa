@@ -63,7 +63,7 @@ class InfoPengembalianController extends Controller
             'nama_rekening' => $request->input('nama_rekening'),
             'nomor_rekening' => $request->input('nomor_rekening'),
             'deskripsi' => 'Pengembalian Dana oleh Petani', 
-            'status' => 'success'
+            'status' => 'Success'
                 
             ]);
 
