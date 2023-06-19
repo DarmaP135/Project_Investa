@@ -57,12 +57,12 @@ class InfoPengembalianController extends Controller
         try {
             $infoPengembalian = InfoPengembalian::create([
             'pengajuan_id' => $pengajuan->id,
-            'jumlah_pembayaran' => $totalPengembalian, //ganti jadi input saja
+            'jumlah_pembayaran' => $totalPengembalian, 
             'pilih_pembayaran' => $request->input('pilih_pembayaran'),
             'nama_bank' => $request->input('nama_bank'),
             'nama_rekening' => $request->input('nama_rekening'),
             'nomor_rekening' => $request->input('nomor_rekening'),
-            'deskripsi' => 'Pengembalian Dana oleh Petani',
+            'deskripsi' => 'Pengembalian Dana oleh Petani', 
             'status' => 'success'
                 
             ]);
