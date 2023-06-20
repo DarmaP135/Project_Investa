@@ -220,10 +220,7 @@ class InvestasiController extends Controller
             return response()->json(['error' => 'Investasi not found'], 404);
         }
 
-        // Ubah status investasi menjadi "sukses"
-        $investasi->status = 'sukses';
-        $investasi->save();
-
+       
         // Ambil jumlah amount dari investasi
         $amount = $investasi->amount;
 
@@ -239,6 +236,10 @@ class InvestasiController extends Controller
         if (!$investor) {
             return response()->json(['error' => 'Investor not found'], 404);
         }
+
+         // Ubah status investasi menjadi "sukses"
+        $investasi->status = 'Success';
+        $investasi->save();
 
         $investor->saldo += $totalInvest;
         $investor->save();
