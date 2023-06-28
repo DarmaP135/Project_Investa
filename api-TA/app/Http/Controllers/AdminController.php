@@ -7,8 +7,11 @@ use App\Models\User;
 use App\Models\Investasi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+
+setlocale(LC_TIME, 'id_ID');
 
 class AdminController extends Controller
 {
@@ -206,5 +209,54 @@ class AdminController extends Controller
         return response()->json(['message' => 'User account deleted successfully']);
     }
 
+    public function chartDashboard()
+    {
+        $months = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
 
+        $user = auth()->guard('admin-api')->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $data = User::select('tipeAkun', DB::raw('MONTH(created_at) as month'), DB::raw('COUNT(*) as count'))
+        ->groupBy('tipeAkun', 'month')
+        ->get()
+        ->toArray();
+
+        // $result = array_fill_keys(['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'], ['investor' => 0, 'petani' => 0]);
+        $result = array_fill_keys($months, ['investor' => 0, 'petani' => 0]);
+
+        foreach ($data as $item) {
+            // $monthName = date('F', mktime(0, 0, 0, $item['month'], 10));
+            $monthName = $months[$item['month']];
+    
+            if ($item['tipeAkun'] === 'Investor') {
+                $result[$monthName]['investor'] += $item['count'];
+            }
+    
+            if ($item['tipeAkun'] === 'Petani') {
+                $result[$monthName]['petani'] += $item['count'];
+            }
+        }
+    
+        $result = array_map(function($key, $value) {
+            return ['month' => $key] + $value;
+        }, array_keys($result), $result);
+    
+        return response()->json($result);
+    }
 }

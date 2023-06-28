@@ -157,4 +157,5 @@ Route::group([
     Route::get('totalPetani', [App\Http\Controllers\AdminController::class, 'totalPetani'])->name('totalPetani');
     Route::get('totalInvestor', [App\Http\Controllers\AdminController::class, 'totalInvestor'])->name('totalInvestor');
     Route::get('totalDana', [App\Http\Controllers\AdminController::class, 'totalDana'])->name('totalDana');
+    Route::get('chartDashboard', [App\Http\Controllers\AdminController::class, 'chartDashboard'])->name('chartDashboard');
 });
