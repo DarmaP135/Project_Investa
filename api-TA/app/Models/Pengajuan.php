@@ -51,7 +51,7 @@ class Pengajuan extends Model
         $endDate = Carbon::parse($this->end_date)->startOfDay();
         $dayLeft = $endDate->diffInDays($currentDate, true);
 
-        return $dayLeft . ' hari lagi.';
+        return $dayLeft;
     }
 
     public function getMessageAttribute()
@@ -65,10 +65,16 @@ class Pengajuan extends Model
 
     public function updateStatus()
     {
-        $totalPengajuan = $this->total_pengajuan;
+        if ($this->status === 'Proyek Selesai') {
+        // Jika status proyek sudah selesai, tidak perlu mengubah status menjadi "Pendanaan Terpenuhi"
+            return;
+        }
+
         $totalDanaTerkumpul = $this->dana_terkumpul;
+        $totalPengajuan = $this->total_pengajuan;
 
         if ($totalDanaTerkumpul >= $totalPengajuan) {
+            // Mengubah status menjadi "Pendanaan Terpenuhi" jika pendanaan sudah terpenuhi
             $this->status = 'Pendanaan Terpenuhi';
             $this->save();
         }

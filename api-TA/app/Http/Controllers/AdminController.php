@@ -47,7 +47,7 @@ class AdminController extends Controller
             return response()->json([
                 'success' => true,
                 'user'    => $user,
-            ], 201);
+            ], 200);
         }
 
         //return JSON process insert failed 
@@ -202,6 +202,12 @@ class AdminController extends Controller
         if (!$userToDelete) {
             return response()->json(['error' => 'User not found'], 404);
         }
+
+        $userToDelete->Invest()->delete();
+
+        $userToDelete->Pengajuans()->delete();
+
+        $userToDelete->dompet()->delete();
 
         // Hapus akun user
         $userToDelete->delete();

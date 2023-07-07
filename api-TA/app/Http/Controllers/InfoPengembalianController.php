@@ -52,12 +52,11 @@ class InfoPengembalianController extends Controller
 
         $pengajuan = Pengajuan::findOrFail($id);
 
-        $totalPengembalian = $pengajuan->total_pengembalian;
 
         try {
             $infoPengembalian = InfoPengembalian::create([
             'pengajuan_id' => $pengajuan->id,
-            'jumlah_pembayaran' => $totalPengembalian, 
+            'jumlah_pembayaran' => $pengajuan->total_pengembalian, 
             'pilih_pembayaran' => $request->input('pilih_pembayaran'),
             'nama_bank' => $request->input('nama_bank'),
             'nama_rekening' => $request->input('nama_rekening'),
@@ -109,6 +108,7 @@ class InfoPengembalianController extends Controller
         try {
             $infoPengembalian = InfoPengembalian::create([
             'pengajuan_id' => $pengajuan->id,
+            'jumlah_pembayaran' => $pengajuan->total_pengembalian, 
             'deskripsi' => $request->input('deskripsi'),
             'status' => $request->input('status'),
                 

@@ -39,7 +39,8 @@ class PengajuanController extends Controller
 
         $pengajuan = Pengajuan::where(function ($query) {
             $query->where('status', 'Proyek Berjalan')
-                ->orWhere('status', 'Pendanaan Terpenuhi');
+                ->orWhere('status', 'Pendanaan Terpenuhi')
+                ->orWhere('status', 'Proyek Selesai');
         })
         
         ->with('kebutuhan', 'files', 'user', 'infoTani')
@@ -49,9 +50,7 @@ class PengajuanController extends Controller
             return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
         }
 
-        foreach ($pengajuan as $p) {
-            $p->updateStatus();
-        }
+        
 
         return response()->json($pengajuan);
     }
@@ -102,8 +101,6 @@ class PengajuanController extends Controller
         if ($pengajuan->isEmpty()) {
             return response()->json(['error' => 'Belum Memiliki Pengajuan'], 404);
         }
-
-       
         return response()->json($pengajuan);
     }
 
@@ -208,8 +205,8 @@ class PengajuanController extends Controller
             'jumlah_anggota' => $request->input('jumlah_anggota'),
             'status_lahan' => $request->input('status_lahan'),
             'luas_lahan' => $request->input('luas_lahan'),
-            'provinsi' => 'Jawa Timur',
-            'kota' => 'Nganjuk',
+            'provinsi' => $request->input('provinsi'),
+            'kota' => $request->input('kota'),
             'kecamatan' => $request->input('kecamatan'),
             'kode_pos' => $request->input('kode_pos'),
             'alamat' => $request->input('alamat'),
@@ -220,7 +217,7 @@ class PengajuanController extends Controller
         return response()->json([
             'success' => true,
             'pengajuan' => $pengajuan,
-        ], 201);
+        ], 200);
 
         //return JSON process insert failed 
         return response()->json([
@@ -263,17 +260,6 @@ class PengajuanController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $validator = Validator::make($request->all(), [
-            'imbal_hasil' => 'required|numeric|min:0|max:100', 
-            'status' => 'required|string',
-            'resiko' => 'required|string',
-            'jumlah_unit' => 'required|numeric',
-            'deskripsi' => 'required|string'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
 
         $pengajuan = Pengajuan::findOrFail($id);
         $jumlahUnit = $request->input('jumlah_unit');

@@ -46,7 +46,7 @@ class AuthContoller extends Controller
             return response()->json([
                 'success' => true,
                 'user'    => $user,
-            ], 201);
+            ], 200);
         }
 
         //return JSON process insert failed 
@@ -86,7 +86,7 @@ class AuthContoller extends Controller
             return response()->json([
                 'success' => true,
                 'user'    => $user,
-            ], 201);
+            ], 200);
         }
 
         //return JSON process insert failed 

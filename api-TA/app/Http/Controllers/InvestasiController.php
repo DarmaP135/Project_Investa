@@ -76,10 +76,18 @@ class InvestasiController extends Controller
         $pengajuan = Pengajuan::findOrFail($id);
         $pengajuanId = $pengajuan->id;
         $hargaPerUnit = $pengajuan->harga_unit; 
+        $unitTersedia = $pengajuan->unit_tersedia;
 
         // Mengambil nilai amount dan unit dari request
         $amount = $request->input('amount');
         $unit = $request->input('unit');
+
+        if ($unit) {
+        // Memeriksa apakah unit yang dibeli lebih besar daripada unit yang tersedia
+            if ($unit > $unitTersedia) {
+                return response()->json(['message' => 'Unit yang dibeli melebihi unit yang tersedia'], 400);
+            }
+        }
 
         if ($amount) {
             // Memeriksa apakah amount merupakan kelipatan dari harga per unit
@@ -91,9 +99,19 @@ class InvestasiController extends Controller
             $unit = $amount / $hargaPerUnit;
             // Pembulatan jumlah unit ke angka terdekat
             $unit = round($unit);
+
+            // Memeriksa apakah unit yang dibeli lebih besar daripada unit yang tersedia
+            if ($unit > $unitTersedia) {
+                return response()->json(['message' => 'Unit yang dibeli melebihi unit yang tersedia'], 400);
+            }
         } elseif ($unit) {
             // Menghitung nominal investasi berdasarkan jumlah unit
             $amount = $unit * $hargaPerUnit;
+
+            // Memeriksa apakah unit yang dibeli lebih besar daripada unit yang tersedia
+            if ($unit > $unitTersedia) {
+                return response()->json(['message' => 'Unit yang dibeli melebihi unit yang tersedia'], 400);
+            }
         }
 
         // Mendapatkan saldo user yang sedang login
@@ -138,6 +156,7 @@ class InvestasiController extends Controller
 
             // Commit transaksi database
             DB::commit();
+
 
             return response()->json([
                 'message' => 'Investasi berhasil',
@@ -214,13 +233,12 @@ class InvestasiController extends Controller
         }
 
         // Ambil data investasi berdasarkan ID
-        $investasi = Investasi::find($id);
+        $investasi = Investasi::findOrFail($id);
 
         if (!$investasi) {
             return response()->json(['error' => 'Investasi not found'], 404);
         }
 
-       
         // Ambil jumlah amount dari investasi
         $amount = $investasi->amount;
 

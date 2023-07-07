@@ -31,10 +31,12 @@ class InfoPinjamanController extends Controller
             $totalKeseluruhan += $info->total;
         }
 
+        $imbal = $pengajuan->imbal_hasil;
         $imbal_hasil = $pengajuan->imbal_hasil / 100;
         $TotalSetelahImbal = $totalKeseluruhan + ($totalKeseluruhan * $imbal_hasil);
 
         return response()->json([
+            'imbal_hasil' => $imbal,
             'Info Pinjaman' => $infoPinjaman,
             'File Info Pinjaman' => $fileInfoPinjaman,
             'Total Keseluruhan' => $totalKeseluruhan,
@@ -102,7 +104,8 @@ class InfoPinjamanController extends Controller
             $file->save();
         }
 
-        $TotalSetelahImbal = $totalKeseluruhan + ($totalKeseluruhan * $imbal_hasil); 
+        $totalPinjam = InfoPinjaman::where('pengajuan_id', $pengajuan->id)->sum('total');
+        $TotalSetelahImbal = $totalPinjam + ($totalPinjam * $imbal_hasil); 
 
         $pengajuan->total_pengembalian = $TotalSetelahImbal;
         $pengajuan->save();
